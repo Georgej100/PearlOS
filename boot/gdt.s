@@ -20,4 +20,7 @@ GDT_End:
 GDT_Descriptor:
 	dw GDT_End - GDT_Start - 1
 	dd GDT_Start
-		
+
+
+CODE_SEG equ GDT_Code - GDT_Start
+DATA_SEG equ GDT_Data - GDT_Start		

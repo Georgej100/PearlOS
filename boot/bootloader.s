@@ -4,10 +4,7 @@ bits 16
 jmp bootloader_start
 
 KERNEL_LOCATION equ 0x8400
-KERNEL_SIZE_SECTORS equ 0x15	; BIOS complains after 40 sectors due to the mav limit of sectors per track
-CODE_SEG equ GDT_Code - GDT_Start
-DATA_SEG equ GDT_Data - GDT_Start
-
+KERNEL_SIZE_SECTORS equ 0x39	; BIOS complains after 40 sectors due to the mav limit of sectors per track
 
 bootloader_start:
 	push welcome_msg
@@ -29,14 +26,19 @@ bootloader_start:
 	mov bx, KERNEL_LOCATION
 	call read_disk 
 
-	;cli
+	cli
 	lgdt [GDT_Descriptor]
 	mov eax, cr0
 	or eax, 1
 	mov cr0, eax
-	jmp CODE_SEG:start_pm_mode
+	jmp start_pm_mode
 
-	jmp $
+	jmp bootloader_start
+
+welcome_msg: db "Loading Kernel...", 0
+
+%include"boot/disc_utils.s"
+%include"boot/gdt.s"
 
 [bits 32]
 start_pm_mode:
@@ -45,9 +47,5 @@ start_pm_mode:
 	mov [0xb800], ax
 	jmp $
 
-welcome_msg: db "Loading Kernel...", 0
-
-%include"boot/disc_utils.s"
-%include"boot/gdt.s"
 
 times 1536 - ($-$$) db 0	; Fill the 3 sectors of bootloader with 0
