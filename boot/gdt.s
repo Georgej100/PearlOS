@@ -1,5 +1,3 @@
-[org 0x7E00]
-
 GDT_Start:
 	GDT_Null:
 		dd 0x0000
