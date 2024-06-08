@@ -44,8 +44,9 @@ welcome_msg: db "Loading Kernel...", 0
 start_pm_mode:
 	mov al, 'A'
 	mov ah, 0x0f
-	mov [0xb800], ax
-	jmp $
+	mov [0xb8000], ax
+	
+	jmp start_pm_mode
 
 
 times 1536 - ($-$$) db 0	; Fill the 3 sectors of bootloader with 0
