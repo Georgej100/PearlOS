@@ -28,10 +28,12 @@ bootloader_start:
 	mov bx, KERNEL_LOCATION
 	call read_disk 
 
+	
+
 	jmp $
 
 welcome_msg: db "Loading Kernel...", 0
 
 %include"boot/disc_utils.s"
 
-times 1536 - ($-$$) db 0
+times 1536 - ($-$$) db 0	; Fill the 3 sectors of bootloader with 0
