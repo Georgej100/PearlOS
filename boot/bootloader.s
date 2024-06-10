@@ -25,28 +25,30 @@ bootloader_start:
 	mov dh, 0x00	; Head
 	mov bx, KERNEL_LOCATION
 	call read_disk 
+	
+	push pm_mode
+	call print
+	add sp, 2
 
-	cli
+	cli	
 	lgdt [GDT_Descriptor]
 	mov eax, cr0
 	or eax, 1
 	mov cr0, eax
 	jmp start_pm_mode
 
-	jmp bootloader_start
-
 welcome_msg: db "Loading Kernel...", 0
+pm_mode: db "Entering PM mode...", 0
 
 %include"boot/disc_utils.s"
 %include"boot/gdt.s"
 
 [bits 32]
 start_pm_mode:
-	mov al, 'A'
-	mov ah, 0x0f
+	mov al, 0x0f
+	mov ah, 'Q'
 	mov [0xb8000], ax
-	
-	jmp start_pm_mode
+	jmp $
 
 
 times 1536 - ($-$$) db 0	; Fill the 3 sectors of bootloader with 0
