@@ -40,4 +40,4 @@ Still working on dat
 All the resources I use a lot are 
  - OSDev.org
  - Daedalus community YT (https://www.youtube.com/@DaedalusCommunity)
- - MellOs and OS reference from mell-o-tron (https://github.com/mell-o-tron) 
+ - MellOs, setup script and OS reference from mell-o-tron (https://github.com/mell-o-tron) 
