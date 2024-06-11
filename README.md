@@ -30,4 +30,6 @@ To run in QEMU run
   make run
 ```
 #### NOTE that it will run in terminal and not in window mode
-To run in a window remove the -nographic flag
+To run in a window remove the -display curses flag
+To end the qemu session, you will have to manually kill it
+Still working on dat
