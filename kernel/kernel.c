@@ -1,8 +1,9 @@
 #include"../drivers/VGAtext.h"
 
-void main(void){	
+extern void main()
+{	
 	
-	WriteCharacter('A', 0, 0, 15, 0);
+	WriteChar('A', 0, 0, 15, 0);
 	
 	while(1)
 	{
