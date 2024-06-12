@@ -6,7 +6,7 @@ A simple bootloader and operating system for x86 machines
 ## What it does
 It has a two stage bootloader
 It isnt finished yet and only loads the kernel into memory
-The kernel is non existant yet but I hope to implement basic features
+The kernel is still in the works but has some very basic features
 
 ## Installation
 
