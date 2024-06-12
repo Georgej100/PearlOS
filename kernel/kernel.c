@@ -1,10 +1,9 @@
-#include<stdint.h>
+#include"../drivers/VGAtext.h"
 
-extern void main(void)
+extern  void main(void)
 {	
-	*(char*)0xb8000 = 'A';
-	*(char*)0xb8000 = 'B';	
-
+	
+	WriteCharacter('A', 0, 0, 15, 0);
 	
 	while(1)
 	{
