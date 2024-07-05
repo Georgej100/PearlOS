@@ -1,7 +1,7 @@
 DIRECTORY= $(PWD)
 CC=i386-elf-gcc
 LD=i386-elf-ld
-CFLAGS = -ffreestanding -m32  
+CFLAGS = -ffreestanding -m32 -g -c 
 
 all: final
 
@@ -9,7 +9,7 @@ run:
 	qemu-system-x86_64 -display curses $(DIRECTORY)/out/out.bin
 
 $(DIRECTORY)/tmp/VGAtext.o: $(DIRECTORY)/drivers/VGAtext.c
-	$(CC) $(CFLAGS) $(DIRECTORY)/drivers/VGAtext.c -o $(DIRECTORY)/drivers/VGAtext.o
+	$(CC) $(CFLAGS) $(DIRECTORY)/drivers/VGAtext.c -o $(DIRECTORY)/tmp/VGAtext.o
 
 $(DIRECTORY)/tmp/kernel.o: $(DIRECTORY)/kernel/kernel.c
 	$(CC) $(CFLAGS) $(DIRECTORY)/kernel/kernel.c -o $(DIRECTORY)/tmp/kernel.o
