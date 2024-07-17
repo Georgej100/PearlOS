@@ -13,6 +13,6 @@ All installation instructions can be found in the INSTALL.md file
 
 ## Credits
 All the resources I use a lot are 
- - OSDev.org
- - Daedalus community YT (https://www.youtube.com/@DaedalusCommunity)
- - MellOs, setup script and OS reference from mell-o-tron (https://github.com/mell-o-tron) 
+ - <a href="https://wiki.osdev.org/Expanded_Main_Page">OS Dev.org</a>
+ - <a href="https://www.youtube.com/@DaedalusCommunity">Daedalus community YT </a>
+ - <a href="https://github.com/mell-o-tron">MellOs, setup script and OS reference from mell-o-tron</a> 
