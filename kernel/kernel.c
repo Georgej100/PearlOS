@@ -1,11 +1,9 @@
-#include"../drivers/VGAtext.h"
+#include "../drivers/VGAtext.h"
+#include "../drivers/printf.h"
 
 extern void main()
-{	
-	
-	WriteChar('X', 0, 0, 15, 0);
-	WriteString("HELLO WORLD\0", 0, 1, 15, 0);
-	
+{		
+	printf("a");
 	while(1)
 	{
 		continue;
