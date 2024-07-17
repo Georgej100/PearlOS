@@ -5,6 +5,11 @@ CFLAGS = -ffreestanding -m32 -g -c
 
 all: final
 
+clean:
+	rm $(DIRECTORY)/out/*.bin
+	rm $(DIRECTORY)/tmp/*.bin
+	rm $(DIRECTORY)/tmp/*.o
+
 run:
 	qemu-system-x86_64 -display curses $(DIRECTORY)/out/out.bin
 
@@ -28,5 +33,5 @@ $(DIRECTORY)/tmp/bootloader.bin: $(DIRECTORY)/boot/bootloader.s
 	nasm -f  bin $(DIRECTORY)/boot/bootloader.s -o $(DIRECTORY)/tmp/bootloader.bin
 
 final: $(DIRECTORY)/out/kernel.bin $(DIRECTORY)/tmp/boot.bin $(DIRECTORY)/tmp/bootloader.bin
-	cat $(DIRECTORY)/tmp/boot.bin $(DIRECTORY)/tmp/bootloader.bin $(DIRECTORY)/out/kernel.bin $(DIRECTORY)/tmp/60sfiller.bin > $(DIRECTORY)/out/out.bin
+	cat $(DIRECTORY)/tmp/boot.bin $(DIRECTORY)/tmp/bootloader.bin $(DIRECTORY)/out/kernel.bin $(DIRECTORY)/filler.bin > $(DIRECTORY)/out/out.bin
 

@@ -1,6 +1,10 @@
 #include"VGAtext.h"
 #include<stdint.h>
 
+#define VIDEO_MEMORY (char*)0xb8000
+#define WIDTH 80
+#define HEIGHT 25
+
 /*
 Writes character to VIDEO_MEMORY at x,y
 character is writen followed by colour info byte
@@ -20,32 +24,13 @@ cX anc cY act as a cursor
 */
 void WriteString(char* string, unsigned int x, unsigned int y, unsigned int forecolour, unsigned int backcolour)
 {
-	char* pString = string;
-	int cX = x;
-	int cY = y;
-
-	while(1)
+	char* pointer = string;
+	int xOffset = 0;
+	int yOffset = 0;
+	while(*pointer != '\0')
 	{
-		WriteChar(*pString, cX, cY, forecolour, backcolour);
-		pString++;
-/*
-		if(cX > WIDTH)
-		{
-			cX = 0;
-			cY++;
-		}
-
-		if(cY > HEIGHT)
-		{
-			cY = 0;
-			cX = 0;
-		}
-*/
-		if(*pString == '\0')
-		{
-			break;
-		}
-		
-		cX++;
-	}	
+		WriteChar(*pointer, x + xOffset, y + yOffset, forecolour, backcolour);
+		pointer++;
+		xOffset++;
+	}
 }
