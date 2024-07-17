@@ -1,7 +1,7 @@
 #include"VGAtext.h"
 #include<stdint.h>
 
-#define VIDEO_MEMORY 0xb8000
+#define VIDEO_MEMORY (char*)0xb8000
 #define WIDTH 80
 #define HEIGHT 25
 
@@ -16,3 +16,21 @@ void WriteChar(char character, unsigned int x, unsigned int y, unsigned int fore
 	*where = character | (attribute << 8);
 }
 
+
+/*
+Uses WriteChar to write string
+Uses a while loop to prevent having to pass length as a parameter
+cX anc cY act as a cursor
+*/
+void WriteString(char* string, unsigned int x, unsigned int y, unsigned int forecolour, unsigned int backcolour)
+{
+	char* pointer = string;
+	int xOffset = 0;
+	int yOffset = 0;
+	while(*pointer != '\0')
+	{
+		WriteChar(*pointer, x + xOffset, y + yOffset, forecolour, backcolour);
+		pointer++;
+		xOffset++;
+	}
+}
