@@ -34,7 +34,7 @@
 #include <stdint.h>
 
 #include "printf.h"
-#include "arith64.c"
+#include "../libs/arith64.c"
 
 // define this globally (e.g. gcc -DPRINTF_INCLUDE_CONFIG_H ...) to include the
 // printf_config.h header file

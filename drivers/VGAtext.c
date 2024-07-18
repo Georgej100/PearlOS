@@ -1,5 +1,7 @@
-#include"VGAtext.h"
-#include<stdint.h>
+#include <stdint.h>
+#include "VGAtext.h"
+#include "../libs/common.h"
+
 
 #define VIDEO_MEMORY (char*)0xb8000
 #define WIDTH 80
@@ -9,7 +11,7 @@
 Writes character to VIDEO_MEMORY at x,y
 character is writen followed by colour info byte
 */
-void write_char(char character, unsigned int forecolour, unsigned int backcolour)
+void write_char (char character, unsigned int forecolour, unsigned int backcolour)
 {
 	uint16_t pos = get_cursor_pos();
 	unsigned int attribute = (backcolour << 4) | (forecolour & 0x0f);
@@ -21,14 +23,14 @@ void write_char(char character, unsigned int forecolour, unsigned int backcolour
 /*
 Moves cursor to x,y
 */
-void move_cursor(unsigned int x, unsigned int y)
+void move_cursor (unsigned int x, unsigned int y)
 {
 	// Calculate VIDEO MEMORY offset
 	uint16_t offset = (y * WIDTH + x);
 	move_cursor_raw(offset);	
 }
 
-void move_cursor_raw(uint16_t pos)
+void move_cursor_raw (uint16_t pos)
 {
 	// Set x position with top 4 bits
 	outb(0x3d4, 0x0f);
@@ -42,7 +44,7 @@ void move_cursor_raw(uint16_t pos)
 /*
 Enables the cursor by defining the start and end scanlines
 */
-void enable_cursor(uint8_t start_scanline, uint8_t end_scanline)
+void enable_cursor (uint8_t start_scanline, uint8_t end_scanline)
 {
 	// Set start scanline
 	outb(0x3d4, 0x0a);
@@ -56,7 +58,7 @@ void enable_cursor(uint8_t start_scanline, uint8_t end_scanline)
 /*
 Disables cursor
 */
-void disable_cursor(void)
+void disable_cursor (void)
 {
 	outb(0x3d4, 0x0a);
 	outb(0x3d5, 0x20);
@@ -67,7 +69,7 @@ void disable_cursor(void)
 Gets cursor position
 Returns (y * width + x)
 */
-uint16_t get_cursor_pos(void)
+uint16_t get_cursor_pos (void)
 {
 	uint16_t pos = 0;
 	

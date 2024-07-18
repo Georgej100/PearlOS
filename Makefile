@@ -11,7 +11,7 @@ clean:
 	rm $(DIRECTORY)/tmp/*.o
 
 run:
-	qemu-system-x86_64 -display curses $(DIRECTORY)/out/out.bin
+	qemu-system-x86_64 -display curses -drive format=raw,file=$(DIRECTORY)/out/out.bin
 
 $(DIRECTORY)/tmp/VGAtext.o: $(DIRECTORY)/drivers/VGAtext.c
 	$(CC) $(CFLAGS) $(DIRECTORY)/drivers/VGAtext.c -o $(DIRECTORY)/tmp/VGAtext.o
@@ -25,8 +25,8 @@ $(DIRECTORY)/tmp/kernel.o: $(DIRECTORY)/kernel/kernel.c
 $(DIRECTORY)/tmp/kernel_entry.o: $(DIRECTORY)/kernel/kernel_entry.s
 	nasm  $(DIRECTORY)/kernel/kernel_entry.s -f elf -o $(DIRECTORY)/tmp/kernel_entry.o
 
-$(DIRECTORY)/out/kernel.bin: $(DIRECTORY)/tmp/kernel_entry.o $(DIRECTORY)/tmp/kernel.o $(DIRECTORY)/tmp/VGAtext.o $(DIRECTORY)/tmp/printf.o
-	$(LD) -o $(DIRECTORY)/out/kernel.bin -Ttext 0x1000 $(DIRECTORY)/tmp/kernel_entry.o $(DIRECTORY)/tmp/kernel.o $(DIRECTORY)/tmp/VGAtext.o $(DIRECTORY)/tmp/printf.o  --oformat binary
+$(DIRECTORY)/out/kernel.bin: $(DIRECTORY)/tmp/kernel_entry.o $(DIRECTORY)/tmp/kernel.o $(DIRECTORY)/tmp/VGAtext.o $(DIRECTORY)/tmp/printf.o $(DIRECTORY)/libs/common.o
+	$(LD) -o $(DIRECTORY)/out/kernel.bin -Ttext 0x1000 $(DIRECTORY)/tmp/kernel_entry.o $(DIRECTORY)/tmp/kernel.o $(DIRECTORY)/tmp/VGAtext.o $(DIRECTORY)/libs/common.o  $(DIRECTORY)/tmp/printf.o  --oformat binary
 	
 
 $(DIRECTORY)/tmp/boot.bin: $(DIRECTORY)/boot/boot.s
