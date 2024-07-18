@@ -15,7 +15,7 @@ void write_char (char character, unsigned int forecolour, unsigned int backcolou
 {
 	uint16_t pos = get_cursor_pos();
 	unsigned int attribute = (backcolour << 4) | (forecolour & 0x0f);
-	volatile uint16_t* where = (volatile uint16_t*)VIDEO_MEMORY;
+	volatile uint16_t* where = (volatile uint16_t*)VIDEO_MEMORY + pos;
 	*where = character | (attribute << 8);
 	move_cursor_raw(pos + 1);
 }
