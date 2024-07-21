@@ -1,10 +1,13 @@
-#include"../drivers/VGAtext.h"
+#include "../drivers/VGAtext.h"
+#include "../drivers/printf.h"
+
 
 extern void main()
 {		
-	
-	WriteString("Hello World\0", 0, 0, 15, 0);
-	WriteChar('X', 0, 1, 15, 0);
+	enable_cursor(0, 15);
+	move_cursor(0, 0);
+	char* message = "Hello World!";
+	printf("%s", message);
 
 	while(1)
 	{
