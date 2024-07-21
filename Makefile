@@ -1,40 +1,48 @@
+default: final
+
 DIRECTORY= $(PWD)
 CC=i386-elf-gcc
 LD=i386-elf-ld
-CFLAGS = -ffreestanding -m32 -g -c 
+ASM=nasm
+ASMFLAGS= -f elf
+CCFLAGS= -ffreestanding -m32 -g -c -Wall -nostdlib
+LDFLAGS= --oformat binary
 
-all: final
+DRIVER_C_SRCS=$(wildcard drivers/*.c)
 
-clean:
-	rm $(DIRECTORY)/out/*.bin
-	rm $(DIRECTORY)/tmp/*.bin
-	rm $(DIRECTORY)/tmp/*.o
+KERNEL_C_SRCS=$(wildcard kernel/*.c) $(wildcard libs/*.c)
+KERNEL_S_SRCS=$(wildcard kernel/*.s)
+KERNEL_OBJS=$(KERNEL_C_SRCS:.c=.o) $(KERNEL_S_SRCS:.s=.o) $(DRIVER_C_SRCS:.c=.o) 
+
+BOOTSECT=bootsect.bin
+KERNEL=kernel.bin
+ISO=boot.iso
+
+%.o: %.c
+	$(CC) -o $@ -c $< $(CCFLAGS)
+
+%.o: %.s
+	$(ASM) -o $@ $< $(ASMFLAGS)
+
+kernel: $(KERNEL_OBJS)
+	$(LD) -o ./out/$(KERNEL) -Ttext 0x1000  $^ $(LDFLAGS) 
+	
+bootloader:
+	$(ASM) -f bin ./boot/boot.s -o ./tmp/boot.bin
+	$(ASM) -f bin ./boot/bootloader.s -o ./tmp/bootloader.bin
+	cat ./tmp/boot.bin ./tmp/bootloader.bin > ./out/$(BOOTSECT)
+
+image:
+	cat ./out/$(BOOTSECT) ./out/$(KERNEL) ./filler.bin > ./out/out.bin
+
+final: bootloader kernel image
+
+clean: 
+	rm ./**/*.o
+	rm ./**/*.bin
+	rm ./*.iso
 
 run:
-	qemu-system-x86_64 -display curses -drive format=raw,file=$(DIRECTORY)/out/out.bin
+	qemu-system-x86_64 -display curses -drive format=raw,file=./out/out.bin
 
-$(DIRECTORY)/tmp/VGAtext.o: $(DIRECTORY)/drivers/VGAtext.c
-	$(CC) $(CFLAGS) $(DIRECTORY)/drivers/VGAtext.c -o $(DIRECTORY)/tmp/VGAtext.o
-
-$(DIRECTORY)/tmp/printf.o: $(DIRECTORY)/drivers/printf.c
-	$(CC) $(CFLAGS) $(DIRECTORY)/drivers/printf.c -o $(DIRECTORY)/tmp/printf.o
-
-$(DIRECTORY)/tmp/kernel.o: $(DIRECTORY)/kernel/kernel.c
-	$(CC) $(CFLAGS) $(DIRECTORY)/kernel/kernel.c -o $(DIRECTORY)/tmp/kernel.o
-
-$(DIRECTORY)/tmp/kernel_entry.o: $(DIRECTORY)/kernel/kernel_entry.s
-	nasm  $(DIRECTORY)/kernel/kernel_entry.s -f elf -o $(DIRECTORY)/tmp/kernel_entry.o
-
-$(DIRECTORY)/out/kernel.bin: $(DIRECTORY)/tmp/kernel_entry.o $(DIRECTORY)/tmp/kernel.o $(DIRECTORY)/tmp/VGAtext.o $(DIRECTORY)/tmp/printf.o $(DIRECTORY)/libs/common.o
-	$(LD) -o $(DIRECTORY)/out/kernel.bin -Ttext 0x1000 $(DIRECTORY)/tmp/kernel_entry.o $(DIRECTORY)/tmp/kernel.o $(DIRECTORY)/tmp/VGAtext.o $(DIRECTORY)/libs/common.o  $(DIRECTORY)/tmp/printf.o  --oformat binary
-	
-
-$(DIRECTORY)/tmp/boot.bin: $(DIRECTORY)/boot/boot.s
-	nasm -f  bin $(DIRECTORY)/boot/boot.s -o $(DIRECTORY)/tmp/boot.bin 
-
-$(DIRECTORY)/tmp/bootloader.bin: $(DIRECTORY)/boot/bootloader.s
-	nasm -f  bin $(DIRECTORY)/boot/bootloader.s -o $(DIRECTORY)/tmp/bootloader.bin
-
-final: $(DIRECTORY)/out/kernel.bin $(DIRECTORY)/tmp/boot.bin $(DIRECTORY)/tmp/bootloader.bin
-	cat $(DIRECTORY)/tmp/boot.bin $(DIRECTORY)/tmp/bootloader.bin $(DIRECTORY)/out/kernel.bin $(DIRECTORY)/filler.bin > $(DIRECTORY)/out/out.bin
 

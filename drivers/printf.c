@@ -34,7 +34,6 @@
 #include <stdint.h>
 
 #include "printf.h"
-#include "../libs/arith64.c"
 #include "VGAtext.h"
 
 // define this globally (e.g. gcc -DPRINTF_INCLUDE_CONFIG_H ...) to include the
