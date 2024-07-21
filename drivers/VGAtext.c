@@ -3,7 +3,7 @@
 #include "../libs/common.h"
 
 
-#define VIDEO_MEMORY (char*)0xb8000
+#define VIDEO_MEMORY 0xb8000
 #define WIDTH 80
 #define HEIGHT 25
 
