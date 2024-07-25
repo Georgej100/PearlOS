@@ -3,8 +3,8 @@ bits 16
 
 jmp bootloader_start
 
-KERNEL_LOCATION equ 0x8400
-KERNEL_SIZE_SECTORS equ 0x39	; BIOS complains after 40 sectors due to the mav limit of sectors per track
+KERNEL_BASE_LOCATION equ 0x8400
+KERNEL_BLOCK_SIZE equ 39		; BIOS can't read over cylinder boundries
 
 bootloader_start:
 	push welcome_msg
@@ -14,18 +14,12 @@ bootloader_start:
 	; --TODO--
 	; Load kernel - DONE
 	; Detect memory
-	; Get drive info
 	; GDT and protected mode - DONE
 	; Jump to kernel - DONE
 	
-	mov ah, 0x02	
-	mov al, KERNEL_SIZE_SECTORS	; Sectors to read
-	mov ch, 0x00	; Cylinder
-	mov cl, 0x05 	; Start sctor
-	mov dh, 0x00	; Head
-	mov bx, KERNEL_LOCATION
-	call read_disk 
-		
+	mov si, KERNEL_PACKET
+	call read_disk	
+	
 	push pm_mode
 	call print
 	add sp, 2
@@ -33,7 +27,6 @@ bootloader_start:
 	mov ah, 0x0
 	mov al, 0x3
 	int 0x10
-	
 	
 	lgdt [GDT_Descriptor]
 	mov eax, cr0
@@ -44,6 +37,16 @@ bootloader_start:
 
 welcome_msg: db "Loading Kernel...", 0
 pm_mode: db "Entering PM mode...", 0
+
+KERNEL_PACKET:
+	db 0x10		; Packet size
+	db 0
+	dw 23		; Sectors num
+	dw KERNEL_BASE_LOCATION		; Location
+	dw 0
+	dd 4		; LBA
+	dd 0
+
 
 %include"boot/disc_utils.s"
 %include"boot/gdt.s"
@@ -58,8 +61,7 @@ start_pm_mode:
 	mov gs, ax
 	mov ebp, 0x90000
 	mov esp, ebp
-
-	jmp KERNEL_LOCATION
+	jmp KERNEL_BASE_LOCATION
 
 
 times 1536 - ($-$$) db 0	; Fill the 3 sectors of bootloader with 0

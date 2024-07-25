@@ -18,6 +18,7 @@ void write_char (char character, unsigned int forecolour, unsigned int backcolou
 	volatile uint16_t* where = (volatile uint16_t*)VIDEO_MEMORY + pos;
 	*where = character | (attribute << 8);
 	move_cursor_raw(pos + 1);
+	return;
 }
 
 /*
@@ -28,6 +29,7 @@ void move_cursor (unsigned int x, unsigned int y)
 	// Calculate VIDEO MEMORY offset
 	uint16_t offset = (y * WIDTH + x);
 	move_cursor_raw(offset);	
+	return;
 }
 
 void move_cursor_raw (uint16_t pos)
@@ -39,6 +41,7 @@ void move_cursor_raw (uint16_t pos)
 	// Set y position with lower 4 bits
 	outb(0x3d4, 0x0e);
 	outb(0x3d5, (uint8_t)((pos >> 8) & 0xFF));
+	return;
 }
 
 /*
@@ -53,6 +56,7 @@ void enable_cursor (uint8_t start_scanline, uint8_t end_scanline)
 	// Set end scanline
 	outb(0x3d4, 0x0b);
 	outb(0x3d5, (inb(0x3d5) & 0xe0) | end_scanline);
+	return;
 }
 
 /*
@@ -62,6 +66,7 @@ void disable_cursor (void)
 {
 	outb(0x3d4, 0x0a);
 	outb(0x3d5, 0x20);
+	return;
 }
 
 
