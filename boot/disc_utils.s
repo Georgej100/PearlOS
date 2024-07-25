@@ -3,14 +3,15 @@ read_disk:
 	mov bp, sp
 	pusha
 	
-	mov ah, 0x02
+	mov ah, 0x42
 	mov dl, 0x80
-	int 0x13
+	int 0x13	; Read using LBA addressing
+	
+	xor al, al
+	mov bx, ax
+	call print_dec
 
-	jc READ_ERROR
-
-	cmp ah, 0x00
-	jne READ_ERROR
+	jc READ_ERROR	; Error check
 	
 	push SUCCESS_MSG
 	call print
