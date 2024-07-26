@@ -41,7 +41,7 @@ pm_mode: db "Entering PM mode...", 0
 KERNEL_PACKET:
 	db 0x10		; Packet size
 	db 0
-	dw 23		; Sectors num
+	dw 60		; Sectors num
 	dw KERNEL_BASE_LOCATION		; Location
 	dw 0
 	dd 4		; LBA

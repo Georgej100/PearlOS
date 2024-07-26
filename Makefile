@@ -3,7 +3,7 @@ CC=i386-elf-gcc
 LD=i386-elf-ld
 ASM=nasm
 ASMFLAGS= -f elf
-CCFLAGS= -ffreestanding -m32 -g -c -Wall -Werror -nostdlib
+CCFLAGS= -ffreestanding -m32 -c -Wall -Werror -nostdlib
 LDFLAGS= --oformat binary
 
 DRIVER_C_SRCS=$(wildcard drivers/*.c)
@@ -31,7 +31,7 @@ bootloader:
 	cat ./tmp/boot.bin ./tmp/bootloader.bin > ./out/$(BOOTSECT)
 
 image:
-	cat ./out/$(BOOTSECT) ./out/$(KERNEL) > ./out/out.bin
+	cat ./out/$(BOOTSECT) ./out/$(KERNEL)  ./filler.bin > ./out/out.bin
 
 dev: bootloader kernel image
 

@@ -68,7 +68,7 @@ int printf_(const char* format, ...);
  * \param format A string that specifies the format of the output
  * \return The number of characters that are WRITTEN into the buffer, not counting the terminating null character
  */
-#define ksprintf sprintf_
+#define sprintf sprintf_
 int sprintf_(char* buffer, const char* format, ...);
 
 
@@ -82,8 +82,8 @@ int sprintf_(char* buffer, const char* format, ...);
  *         null character. A value equal or larger than count indicates truncation. Only when the returned value
  *         is non-negative and less than count, the string has been completely written.
  */
-#define ksnprintf  snprintf_
-#define kvsnprintf vsnprintf_
+#define snprintf  snprintf_
+#define vsnprintf vsnprintf_
 int  snprintf_(char* buffer, size_t count, const char* format, ...);
 int vsnprintf_(char* buffer, size_t count, const char* format, va_list va);
 
@@ -95,7 +95,7 @@ int vsnprintf_(char* buffer, size_t count, const char* format, va_list va);
  * \return The number of characters that are WRITTEN into the buffer, not counting the terminating null character
  */
 #define vprintf vprintf_
-int kvprintf_(const char* format, va_list va);
+int vprintf_(const char* format, va_list va);
 
 
 /**
@@ -106,7 +106,7 @@ int kvprintf_(const char* format, va_list va);
  * \param format A string that specifies the format of the output
  * \return The number of characters that are sent to the output function, not counting the terminating null character
  */
-int kfctprintf(void (*out)(char character, void* arg), void* arg, const char* format, ...);
+int fctprintf(void (*out)(char character, void* arg), void* arg, const char* format, ...);
 
 
 #ifdef __cplusplus
