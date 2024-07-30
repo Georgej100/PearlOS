@@ -8,9 +8,12 @@ LDFLAGS= --oformat binary
 
 DRIVER_C_SRCS=$(wildcard drivers/*.c)
 
+CPU_C_SRCS=$(wildcard CPU/*.c)
+CPU_S_SRCS=$(wildcard CPU/*.s)
+
 KERNEL_C_SRCS=$(wildcard kernel/*.c) $(wildcard libs/*.c)
 KERNEL_S_SRCS=$(wildcard kernel/*.s)
-KERNEL_OBJS=$(KERNEL_C_SRCS:.c=.o) $(KERNEL_S_SRCS:.s=.o) $(DRIVER_C_SRCS:.c=.o) 
+KERNEL_OBJS=$(KERNEL_C_SRCS:.c=.o) $(KERNEL_S_SRCS:.s=.o) $(DRIVER_C_SRCS:.c=.o) $(CPU_C_SRCS:.c=.o) $(CPU_S_SRCS:.s=.o)
 
 BOOTSECT=bootsect.bin
 KERNEL=kernel.bin
@@ -23,6 +26,7 @@ ISO=boot.iso
 	$(ASM) -o $@ $< $(ASMFLAGS)
 
 kernel: $(KERNEL_OBJS)
+	echo  $^
 	$(LD) -o ./out/$(KERNEL) -Ttext 0x8400  $^ $(LDFLAGS) 
 	
 bootloader:
