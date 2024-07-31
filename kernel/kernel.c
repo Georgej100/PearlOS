@@ -4,6 +4,9 @@
 
 #define KERNEL_VERSION 1.0
 
+// Debug function
+int zero();
+
 extern void main()
 {			
 	
@@ -12,8 +15,15 @@ extern void main()
 	
 	init_IDT();
 	
+	int x = 0 / zero();
+	x++;
 	while(1)
 	{
 		continue;
 	}
+}
+
+int zero()
+{
+	return 0 * 0;
 }

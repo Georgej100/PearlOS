@@ -4,23 +4,25 @@
 #include "interrupts.h"
 #include "../libs/common.h"
 
-extern void IDT_flush(uint32_t);
-
 struct IDT_entry IDT[256];
 struct IDTptr IDTR;
+
+void* IRQ_routines[16] = {0, 0, 0, 0, 0, 0, 0, 0,
+						  0, 0, 0, 0, 0, 0, 0, 0};
+
 
 void init_IDT(void)
 {
 	// Sets up IDT pointer
 	IDTR.base = (uint32_t) &IDT;
-	IDTR.limit = (sizeof(struct IDT_entry) * 256) - 1;
+	IDTR.limit = sizeof(struct IDT_entry) * 256 - 1;
 	
 	// Clear IDT
 	memset(&IDT, 0, sizeof(struct IDT_entry) * 256);
 	
 	// PIC
 	init_PIC();	
-	
+		
 	// Set ISRs
 	set_IDT_entry(0, (uint32_t)isr0,0x00, 0x8E);
     set_IDT_entry(1, (uint32_t)isr1,0x00, 0x8E);
@@ -54,11 +56,31 @@ void init_IDT(void)
     set_IDT_entry(29, (uint32_t)isr29, 0x00, 0x8E);
     set_IDT_entry(30, (uint32_t)isr30, 0x00, 0x8E);
     set_IDT_entry(31, (uint32_t)isr31, 0x00, 0x8E);
+
+	set_IDT_entry(32, (uint32_t)irq0, 0x00, 0x8E);
+    set_IDT_entry(33, (uint32_t)irq1, 0x00, 0x8E);
+    set_IDT_entry(34, (uint32_t)irq2, 0x00, 0x8E);
+    set_IDT_entry(35, (uint32_t)irq3, 0x00, 0x8E);
+    set_IDT_entry(36, (uint32_t)irq4, 0x00, 0x8E);
+    set_IDT_entry(37, (uint32_t)irq5, 0x00, 0x8E);
+    set_IDT_entry(38, (uint32_t)irq6, 0x00, 0x8E);
+    set_IDT_entry(39, (uint32_t)irq7, 0x00, 0x8E);
+    set_IDT_entry(40, (uint32_t)irq8, 0x00, 0x8E);
+    set_IDT_entry(41, (uint32_t)irq9, 0x00, 0x8E);
+    set_IDT_entry(42, (uint32_t)irq10, 0x00, 0x8E);
+    set_IDT_entry(43, (uint32_t)irq11, 0x00, 0x8E);
+    set_IDT_entry(44, (uint32_t)irq12, 0x00, 0x8E);
+    set_IDT_entry(45, (uint32_t)irq13, 0x00, 0x8E);
+    set_IDT_entry(46, (uint32_t)irq14, 0x00, 0x8E);
+    set_IDT_entry(47, (uint32_t)irq15, 0x00, 0x8E);
 	
 	set_IDT_entry(128, (uint32_t)isr128, 0x00, 0x8E); //System calls
     set_IDT_entry(177, (uint32_t)isr177, 0x00, 0x8E); //System calls
+	
+	// Set IDTR register
+	asm volatile("lidt %0" ::"m"(IDTR) : "memory");	
 
-	IDT_flush((uint32_t) &IDTR);
+	kprintf("IDT successfully initialized!\n");
 	
 	return;
 }
@@ -69,7 +91,7 @@ void set_IDT_entry(uint8_t index, uint32_t base, uint16_t selector, uint8_t flag
 	IDT[index].base_high = (base >> 16) & 0xFFFF;
 	IDT[index].selector = selector;
 	IDT[index].zero = 0;
-	IDT[index].attributes = flags | 0x60;
+	IDT[index].attributes = flags;
 
 	return;
 
@@ -138,9 +160,43 @@ void isr_handler(struct InterruptRegisters* regs)
 {
 	if(regs->int_no < 32)
 	{
-		char* msg = "";
-		sprintf(msg, "Exception caught: %s\nHalting system", exception_messages[regs->int_no]);
-		kprintf(msg);
+		kprintf("Exception caught: %s\nHalting system", exception_messages[regs->int_no]);
+		while(1)
+		{
+			continue;
+		}
 	}		
 }
+
+void install_IRQ_handler(int IRQ, void (*handler)(struct InterruptRegisters *regs))
+{
+	IRQ_routines[IRQ] = handler;
+}
+
+void uninstall_IRQ_handler(int IRQ)
+{
+	IRQ_routines[IRQ] = 0;
+}
+
+void irq_handler(struct InterruptRegisters* regs)
+{
+	void (*handler)(struct InterruptRegisters *regs);
+	handler = IRQ_routines[regs->int_no - 32];
+
+	if(handler)
+	{
+		handler(regs);
+	}
+
+	if(regs->int_no >= 40)
+	{
+		outb(0xA0, 0x02);
+	}
+
+	outb(0x20, 0x20);
+}
+
+
+
+
 
