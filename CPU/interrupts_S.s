@@ -1,3 +1,12 @@
+extern IDTR
+
+global IDT_flush
+IDT_flush:
+	mov eax, IDTR
+	lidt [eax]
+	sti 
+	ret
+
 ; Macro for ISRs with no error codes
 %macro ISR_NOERRCODE 1
 	global isr%1

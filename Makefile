@@ -3,7 +3,7 @@ CC=i386-elf-gcc
 LD=i386-elf-ld
 ASM=nasm
 ASMFLAGS= -f elf
-CCFLAGS= -ffreestanding -m32 -c -Wall -Werror -nostdlib
+CCFLAGS= -ffreestanding -m32 -c -Wall -Werror -nostdlib 
 LDFLAGS= --oformat binary
 
 DRIVER_C_SRCS=$(wildcard drivers/*.c)
@@ -26,8 +26,7 @@ ISO=boot.iso
 	$(ASM) -o $@ $< $(ASMFLAGS)
 
 kernel: $(KERNEL_OBJS)
-	echo  $^
-	$(LD) -o ./out/$(KERNEL) -Ttext 0x8400  $^ $(LDFLAGS) 
+	$(LD) -o ./out/$(KERNEL) -Ttext 0x8400  $^ $(LDFLAGS)  
 	
 bootloader:
 	$(ASM) -f bin ./boot/boot.s -o ./tmp/boot.bin
@@ -42,7 +41,6 @@ dev: bootloader kernel image
 clean: 
 	rm ./**/*.o
 	rm ./**/*.bin
-
 
 run:
 	qemu-system-x86_64 -display curses -drive format=raw,file=./out/out.bin
