@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "../kernel/kernel.h"
 #include "../drivers/printf.h"
 #include "interrupts.h"
 #include "../libs/common.h"
@@ -161,7 +162,7 @@ void isr_handler(struct InterruptRegisters* regs)
 {
 	if(regs->int_no < 32)
 	{
-		kprintf("Exception caught: %s\nHalting system", exception_messages[regs->int_no]);
+		kpanic("Interrupt caught!", regs);
 		asm volatile ("1: jmp 1b");
 	}	
 }
