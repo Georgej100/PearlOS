@@ -8,12 +8,21 @@
 #define HEIGHT 25
 
 /*
-Writes character to VIDEO_MEMORY at x,y
-character is writen followed by colour info byte
+Character is writen followed by colour info byte
 */
 void write_char (char character, unsigned int forecolour, unsigned int backcolour)
 {
-	uint16_t pos = get_cursor_pos();
+	uint16_t pos = get_cursor_pos_raw();
+
+	// Check if character is newline
+	if (character == '\n')
+	{
+		uint16_t y = (uint16_t)(pos / WIDTH);
+		move_cursor(0, (y + 1));
+		return;
+		
+	}
+	
 	unsigned int attribute = (backcolour << 4) | (forecolour & 0x0f);
 	volatile uint16_t* where = (volatile uint16_t*)VIDEO_MEMORY + pos;
 	*where = character | (attribute << 8);
@@ -74,7 +83,7 @@ void disable_cursor (void)
 Gets cursor position
 Returns (y * width + x)
 */
-uint16_t get_cursor_pos (void)
+uint16_t get_cursor_pos_raw (void)
 {
 	uint16_t pos = 0;
 	

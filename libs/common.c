@@ -12,3 +12,13 @@ uint8_t inb (uint16_t port)
 	asm volatile ( "inb %1, %0" : "=a" ( ret ) : "dN" ( port ) );
 	return ret;
 }
+
+void memset(void* mem, char data, int count)
+{
+	char* block = (char*)mem;
+	for(int x = 0; x < count; x++)
+	{
+		*block = data;
+		block++;
+	}
+}
