@@ -13,13 +13,7 @@ extern void main()
 	
 	init_IDT();
 	
-	volatile int x = 0;	
-	int y = x/x;
-	y = x/x;	
-	y++;
-	
-	kprintf("TEST\n");
-	
+		
 	while(1)
 	{
 		continue;

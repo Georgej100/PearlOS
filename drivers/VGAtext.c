@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include "../libs/stdint.h"
 #include "VGAtext.h"
 #include "../libs/common.h"
 

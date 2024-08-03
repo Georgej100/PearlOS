@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include "../libs/stdint.h"
 #include "../libs/common.h"
 
 struct IDT_entry

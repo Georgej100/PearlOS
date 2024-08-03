@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include "../libs/stdint.h"
 
 #include "../kernel/kernel.h"
 #include "../drivers/printf.h"
