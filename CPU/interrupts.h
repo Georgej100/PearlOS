@@ -18,8 +18,8 @@ struct IDTptr
 }__attribute__((packed));
 
 void set_IDT_entry(uint8_t index, uint32_t base, uint16_t selector, uint8_t flags);
-void init_IDT(void);
-void init_PIC(void);
+void IDT_init(void);
+void PIC_init(void);
 void isr_handler(struct InterruptRegisters* regs);
 void install_IRQ_handler(int IRQ, void (*handler)(struct InterruptRegisters *regs));
 void uninstall_IRQ_handler(int IRQ);

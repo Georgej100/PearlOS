@@ -1,4 +1,5 @@
-#include "../drivers/VGAtext.h"
+#include "kernel.h"
+#include "../drivers/ps2.h"
 #include "../drivers/printf.h"
 #include "../CPU/interrupts.h"
 #include "../libs/common.h"
@@ -8,12 +9,11 @@
 extern void main()
 {			
 	
-	move_cursor(0, 0);
 	kprintf("Welcome to PearlOS V%f\n\0", KERNEL_VERSION);
 	
-	init_IDT();
-	
-		
+	IDT_init();
+	ps2_init();	
+			
 	while(1)
 	{
 		continue;
