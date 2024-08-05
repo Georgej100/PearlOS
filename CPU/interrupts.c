@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include "../libs/stdint.h"
 
 #include "../kernel/kernel.h"
 #include "../drivers/printf.h"
@@ -13,7 +13,7 @@ void* IRQ_routines[16] = {0, 0, 0, 0, 0, 0, 0, 0,
 
 extern void IDT_flush();
 
-void init_IDT(void)
+void IDT_init(void)
 {
 	// Sets up IDT pointer
 	IDTR.base = (uint32_t) &IDT;
@@ -23,7 +23,7 @@ void init_IDT(void)
 	memset(&IDT, 0, sizeof(struct IDT_entry) * 256);
 	
 	// PIC
-	init_PIC();	
+	PIC_init();	
 		
 	// Set ISRs
 	set_IDT_entry(0, (uint32_t)isr0,0x08, 0x8E);
@@ -99,7 +99,7 @@ void set_IDT_entry(uint8_t index, uint32_t base, uint16_t selector, uint8_t flag
 
 }
 
-void init_PIC(void)
+void PIC_init(void)
 { 
 	// MASTER CHIP @ 0x20 commands and 0x21 data
 	// SLAVE CHIP @ 0xA0 commands and 0xA1 data
@@ -119,7 +119,7 @@ void init_PIC(void)
 
 	outb(0x21, 0x0);
 	outb(0xA1, 0x0);
-
+	
 	return;
 }
 

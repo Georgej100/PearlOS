@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include "../libs/stdint.h"
 
 void write_char(char character, unsigned int forecolour, unsigned int backcolour);
 void disable_cursor(void);
