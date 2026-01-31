@@ -1,6 +1,6 @@
 DIRECTORY= $(PWD)
-CC=i386-elf-gcc
-LD=i386-elf-ld
+CC=i686-elf-gcc
+LD=i686-elf-ld
 ASM=nasm
 ASMFLAGS= -f elf
 CCFLAGS= -ffreestanding -m32 -c -Wall -Werror -nostdlib 
