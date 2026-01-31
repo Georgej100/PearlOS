@@ -1,6 +1,6 @@
 DIRECTORY= $(PWD)
-CC=i686-elf-gcc
-LD=i686-elf-ld
+CC=i386-elf-gcc
+LD=i386-elf-ld
 ASM=nasm
 ASMFLAGS= -f elf
 CCFLAGS= -ffreestanding -m32 -c -Wall -Werror -nostdlib 
@@ -46,3 +46,4 @@ run:
 	qemu-system-x86_64 -display curses -drive format=raw,file=./out/out.bin
 
 
+docker: clean dev run

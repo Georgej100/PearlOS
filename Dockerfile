@@ -1,13 +1,9 @@
-FROM debian:12
+FROM i386-elf-gcc:latest
 
-COPY setup.sh /tmp
+RUN apt update -y
+RUN apt install qemu-system -y
+RUN apt install nasm -y
 
-RUN chmod 777 /tmp/setup.sh
-RUN yes | /tmp/setup.sh
-
-COPY . /pearlos
 WORKDIR /pearlos
 
-ENV PATH = "/opt/i386-elf/bin:$PATH"
-
-CMD ["make", "dev"]
+CMD ["make", "docker"]
