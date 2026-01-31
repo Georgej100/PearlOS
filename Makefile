@@ -46,3 +46,4 @@ run:
 	qemu-system-x86_64 -display curses -drive format=raw,file=./out/out.bin
 
 
+docker: clean dev run
