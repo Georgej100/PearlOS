@@ -6,4 +6,4 @@ RUN apt install nasm -y
 
 WORKDIR /pearlos
 
-CMD ["make", "docker", "-s"]
+CMD ["make", "docker"]
